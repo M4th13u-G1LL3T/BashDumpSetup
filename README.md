@@ -42,7 +42,7 @@ Le script `install-wsl-ubuntu.ps1` a été créé sur votre Bureau.
 
 3. **Exécuter le script :**
    ```powershell
-   .\install-wsl-ubuntu.ps1
+   powershell -ExecutionPolicy ByPass -File .\install-wsl-ubuntu.ps1
    ```
 
 ### 3. Suivre les instructions
