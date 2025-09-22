@@ -1,173 +1,54 @@
-# Script d'Installation WSL et Ubuntu sur Windows 11
+## Script d'installation WSL et Ubuntu sous Windows
 
-## Description
+Ce dossier contient le script `WSL_Install.bat` qui automatise l'activation des fonctionnalités Windows nécessaires à WSL2, planifie l'installation d'Ubuntu au prochain redémarrage, puis redémarre la machine.
 
-Ce script PowerShell automatise l'installation complète de WSL 2 et Ubuntu sur Windows 11. Il gère toutes les conditions possibles et effectue l'installation de manière autonome.
+### Ce que fait le script
+- Active les fonctionnalités Windows suivantes sans redémarrage immédiat:
+  - Microsoft-Hyper-V
+  - Microsoft-Windows-Subsystem-Linux (WSL)
+  - VirtualMachinePlatform
+- Programme via `RunOnce` l'exécution au prochain démarrage de:
+  - `wsl.exe --set-default-version 2`
+  - `wsl.exe --install -d Ubuntu`
+- Déclenche un redémarrage automatique pour finaliser l'activation des fonctionnalités.
 
-## Fonctionnalités
+### Prérequis
+- Windows 10 version 2004 (build 19041) ou plus récent, ou Windows 11.
+- Droits administrateur sur la machine.
+- Connexion Internet pour télécharger les composants WSL et la distribution Ubuntu.
 
-- ✅ Vérification automatique des privilèges administrateur
-- ✅ Vérification de la compatibilité Windows
-- ✅ Activation automatique des fonctionnalités Windows nécessaires
-- ✅ Téléchargement et installation du package de mise à jour du noyau Linux
-- ✅ Configuration de WSL 2 comme version par défaut
-- ✅ Installation automatique d'Ubuntu
-- ✅ Configuration de l'utilisateur Ubuntu
-- ✅ Vérification complète de l'installation
-- ✅ Messages colorés pour une meilleure lisibilité
-- ✅ Gestion d'erreurs robuste
-
-## Prérequis
-
-- Windows 10 version 2004 (build 19041) ou plus récent / Windows 11
-- Privilèges administrateur
-- Connexion Internet pour télécharger les composants
-
-## Instructions d'utilisation
-
-### 1. Téléchargement du script
-
-Le script `install-wsl-ubuntu.ps1` a été créé sur votre Bureau.
-
-### 2. Exécution du script
-
-1. **Ouvrir PowerShell en tant qu'administrateur :**
-   - Appuyez sur `Windows + X`
-   - Sélectionnez "Windows PowerShell (Admin)" ou "Terminal (Admin)"
-
-2. **Naviguer vers le répertoire du script :**
-   ```powershell
-   cd $env:USERPROFILE\Desktop
+### Utilisation
+1. Ouvrez une invite de commandes en tant qu'administrateur.
+2. Naviguez dans le dossier du script et exécutez:
+   ```bat
+   WSL_Install.bat
    ```
+3. Le PC redémarre automatiquement après l'activation des fonctionnalités.
+4. Au redémarrage, l'installation WSL/Ubuntu démarre automatiquement (fenêtre console Windows). Suivez les instructions (création d'utilisateur Linux, etc.).
 
-3. **Exécuter le script :**
-   ```powershell
-   powershell -ExecutionPolicy ByPass -File .\install-wsl-ubuntu.ps1
-   ```
+### Vérifications et dépannage
+- Vérifier que WSL par défaut est bien en version 2:
+  ```bat
+  wsl.exe -l -v
+  ```
+  Ubuntu doit apparaître avec la colonne `VERSION` à `2`.
+- Si l'installation d'Ubuntu ne démarre pas au redémarrage, vous pouvez la lancer manuellement:
+  ```bat
+  wsl.exe --set-default-version 2
+  wsl.exe --install -d Ubuntu
+  ```
+- Pour vérifier/retirer l'entrée `RunOnce` manuellement (avancé):
+  - Clé: `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce`
+  - Valeur: `InstallUbuntuWSL`
 
-### 3. Suivre les instructions
+### Téléchargement de Safe Exam Browser
+Pour les besoins d'examen sécurisé, vous pouvez télécharger Safe Exam Browser (SEB) depuis la page officielle des téléchargements:
 
-Le script vous guidera à travers le processus d'installation :
+- [Télécharger Safe Exam Browser](https://safeexambrowser.org/download_en.html)
 
-- Il vérifiera automatiquement votre système
-- Il activera les fonctionnalités Windows nécessaires
-- Il téléchargera et installera les composants requis
-- Il installera Ubuntu
-- Il vous demandera de configurer votre utilisateur Ubuntu
+Consultez la documentation fournie sur cette page pour choisir la version adaptée à votre système (Windows, macOS, iOS) et suivre les bonnes pratiques d'installation et de configuration.
 
-## Étapes du processus d'installation
-
-1. **Vérification des prérequis**
-   - Privilèges administrateur
-   - Version de Windows compatible
-
-2. **Activation des fonctionnalités Windows**
-   - Plateforme de machine virtuelle
-   - Sous-système Windows pour Linux (WSL)
-
-3. **Installation du package de mise à jour du noyau Linux**
-   - Téléchargement automatique depuis Microsoft
-   - Installation silencieuse
-
-4. **Configuration de WSL 2**
-   - Définition de WSL 2 comme version par défaut
-
-5. **Installation d'Ubuntu**
-   - Téléchargement depuis le Microsoft Store ou winget
-   - Installation automatique
-
-6. **Configuration de l'utilisateur**
-   - Lancement d'Ubuntu pour la première configuration
-   - Création du nom d'utilisateur et mot de passe
-
-7. **Vérification finale**
-   - Contrôle du statut WSL
-   - Affichage des distributions installées
-
-## Utilisation après installation
-
-Une fois l'installation terminée, vous pouvez utiliser Ubuntu de plusieurs façons :
-
-### Via PowerShell/Terminal
-```powershell
-wsl
-```
-
-### Via le menu Démarrer
-- Recherchez "Ubuntu" dans le menu Démarrer
-- Cliquez sur l'icône Ubuntu
-
-### Via Windows Terminal (recommandé)
-- Installez Windows Terminal depuis le Microsoft Store
-- Ajoutez Ubuntu comme profil dans Windows Terminal
-
-## Commandes utiles WSL
-
-```powershell
-# Lister les distributions installées
-wsl --list --verbose
-
-# Vérifier le statut WSL
-wsl --status
-
-# Mettre à jour Ubuntu
-wsl -d Ubuntu -e sudo apt update && sudo apt upgrade
-
-# Arrêter WSL
-wsl --shutdown
-
-# Désinstaller une distribution
-wsl --unregister Ubuntu
-```
-
-## Dépannage
-
-### Problèmes courants
-
-1. **Erreur de privilèges administrateur**
-   - Solution : Exécuter PowerShell en tant qu'administrateur
-
-2. **Erreur de version Windows**
-   - Solution : Mettre à jour Windows vers une version compatible
-
-3. **Erreur de téléchargement**
-   - Solution : Vérifier la connexion Internet et réessayer
-
-4. **Erreur d'installation d'Ubuntu**
-   - Le script tentera automatiquement d'autres méthodes d'installation
-
-### Logs et débogage
-
-Le script affiche des messages colorés pour indiquer le statut :
-- 🟢 **Vert** : Succès
-- 🟡 **Jaune** : Avertissement ou information
-- 🔴 **Rouge** : Erreur
-- 🔵 **Cyan** : Information technique
-
-## Support
-
-Si vous rencontrez des problèmes :
-
-1. Vérifiez que vous avez les privilèges administrateur
-2. Assurez-vous d'avoir une connexion Internet stable
-3. Redémarrez votre ordinateur si nécessaire
-4. Vérifiez que Windows est à jour
-
-## Notes importantes
-
-- Le script nécessite un redémarrage pour finaliser l'installation
-- Ubuntu sera configuré avec votre nom d'utilisateur et mot de passe
-- WSL 2 utilise la virtualisation, assurez-vous que la virtualisation est activée dans le BIOS
-- Le script est conçu pour fonctionner sur Windows 11 mais peut aussi fonctionner sur Windows 10 compatible
-
-## Sécurité
-
-- Le script télécharge uniquement des composants officiels de Microsoft
-- Aucune donnée personnelle n'est collectée
-- Le script ne modifie que les fonctionnalités Windows nécessaires pour WSL
-
----
-
-**Auteur :** Assistant IA  
-**Date :** $(Get-Date -Format "yyyy-MM-dd")  
-**Version :** 1.0 
+### Notes
+- Le script doit impérativement être exécuté en tant qu'administrateur; sinon, il se relancera avec élévation de privilèges.
+- Le redémarrage est nécessaire pour finaliser l'activation des fonctionnalités Windows.
+- Selon la politique réseau/pare-feu de votre organisation, le téléchargement d'Ubuntu via WSL peut être filtré.
